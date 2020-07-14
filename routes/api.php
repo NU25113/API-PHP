@@ -46,6 +46,8 @@ Route::prefix('admin')->group(function() {
 
 // day2
 Route::apiResource('product', 'API\ProductController');
+// api/search/product?name=coke&status=active
+Route::get('/search/product', 'API\ProductController@search');
 
 // Route::get('/product', 'API\ProductControllerr@index');
 // Route::post('/product', 'API\ProductControllerr@store');

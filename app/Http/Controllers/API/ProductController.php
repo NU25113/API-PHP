@@ -15,7 +15,18 @@ class ProductController extends Controller
     public function index()
     {
         $product = ['coke', 'pepsi', 'greentea'];
-        return $product;
+        return response()->json($product, 200);
+    }
+
+    public function search()
+    {
+        $name = request()->query('name');
+        $status = request()->query('status');
+
+        return response()->json([
+            'name' => $name,
+            'status' => $status
+        ], 200);
     }
 
     /**
@@ -27,8 +38,22 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //insert product
+        // return $request->all();
 
-        return $request->all();
+        // $name = $request->input('name');
+        // $price = $request->input('price');
+
+        $name = $request->name;
+        $price = $request->price;
+
+        return response()->json([
+            'status_code' => 201,
+            'message' => 'เพิ่มข้อมูลเรียบร้อย',
+            'product' => [
+                'name' => $name,
+                'price' => $price
+            ]
+        ], 201);
     }
 
     /**
@@ -39,7 +64,13 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return $id;
+        $name = 'Coke';
+        $url =  request()->url(); //current url
+        return response()->json([
+            'id' => $id,
+            'name' => $name,
+            'url' => $url
+        ], 200);
     }
 
     /**
@@ -66,7 +97,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return 'delete: ' . $id;
     }
 
 
