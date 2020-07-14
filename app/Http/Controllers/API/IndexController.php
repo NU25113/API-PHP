@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     public function index() {
-        return 'Date: ' . now() . config('app.name');
+        return 'DateTime: ' . now() . config('app.name');
     }
 
     public function contact($email) {
