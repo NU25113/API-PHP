@@ -66,10 +66,12 @@ class ProductController extends Controller
     {
         $name = 'Coke';
         $url =  request()->url(); //current url
+        $photo = request()->getSchemeAndHttpHost() . '/upload/coke.jpg';//https://dev.site.com
         return response()->json([
             'id' => $id,
             'name' => $name,
-            'url' => $url
+            'url' => $url,
+            'photo' => $photo
         ], 200);
     }
 
