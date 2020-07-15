@@ -54,3 +54,7 @@ Route::get('/search/product', 'API\ProductController@search');
 // Route::get('/product/{id}', 'API\ProductControllerr@show');
 // Route::put('/product/{id}', 'API\ProductControllerr@update');
 // Route::delete('/product/{id}', 'API\ProductControllerr@destroy');
+
+
+//day 3
+Route::apiResource('department', 'API\DepartmentController');
