@@ -36,4 +36,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //one to one
+    public function officer() {
+        //(user_id) fk's officers table, (id)  pk's users table
+        return $this->hasOne(Officer::class, 'user_id', 'id');
+    }
+
 }

@@ -60,3 +60,5 @@ Route::get('/search/product', 'API\ProductController@search');
 Route::apiResource('department', 'API\DepartmentController');
 // api/search/department?name=บ
 Route::get('/search/department', 'API\DepartmentController@search');
+
+Route::apiResource('officer', 'API\OfficerController');
