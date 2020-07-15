@@ -58,3 +58,5 @@ Route::get('/search/product', 'API\ProductController@search');
 
 //day 3
 Route::apiResource('department', 'API\DepartmentController');
+// api/search/department?name=บ
+Route::get('/search/department', 'API\DepartmentController@search');

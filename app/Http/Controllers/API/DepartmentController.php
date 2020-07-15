@@ -21,10 +21,29 @@ class DepartmentController extends Controller
         // $d = Department::find(2);
         // $d = Department::where('name','like', '%บ%')->get();
         // $d = Department::latest()->get();//sort desc created_at
-        $d = DB::select('select * from departments order by id desc');
-        $d_count = Department::count();
+        // $d = DB::select('select * from departments order by id desc');
+        // $d_count = Department::count();
+        // return response()->json([
+        //     'total' => $d_count,
+        //     'data' => $d
+        // ], 200);
+
+        // $d = Department::orderBy('id','desc')->with(['officers'])->get();
+        $d = Department::orderBy('id','desc')->with(['officers' => function($query) {
+            $query->orderBy('salary','desc');
+        }])->get();
+
         return response()->json([
-            'total' => $d_count,
+            'data' => $d
+        ], 200);
+    }
+
+    public function search() {
+        $query = request()->query('name');
+        $keyword = '%'.$query.'%';
+        $d = Department::where('name', 'like', $keyword)->get();
+
+        return response()->json([
             'data' => $d
         ], 200);
     }

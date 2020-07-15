@@ -15,4 +15,11 @@ class Department extends Model
     //Mass Assignment ใช้คำสั่ง create แทน save()
     protected $fillable = ['name'];
 
+    //one to many
+    public function officers() { //ชื่อ relation ไม่ใช่ชื่อตาราง
+        // return $this->hasMany(Officer::class); // auto fk department_id, pk id
+        //department_id fk's ตาราง officers, ส่วน id คือ pk ของตารางนี้ (departments)
+        return $this->hasMany(Officer::class, 'department_id', 'id');
+    }
+
 }
