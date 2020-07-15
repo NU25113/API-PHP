@@ -12,5 +12,7 @@ class Department extends Model
     //public $incrementing = false; //pk ไม่ได้ auto_increment
     //public $timestamps = false;//ตารางเราไม่มีคอลัมน์ created_at/updated_at ใน table
 
+    //Mass Assignment ใช้คำสั่ง create แทน save()
+    protected $fillable = ['name'];
 
 }

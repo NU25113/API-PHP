@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Department;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -19,7 +20,8 @@ class DepartmentController extends Controller
         // $d = Department::select('id','name')->orderBy('id','desc')->get();
         // $d = Department::find(2);
         // $d = Department::where('name','like', '%บ%')->get();
-        $d = Department::latest()->get();//sort desc created_at
+        // $d = Department::latest()->get();//sort desc created_at
+        $d = DB::select('select * from departments order by id desc');
         $d_count = Department::count();
         return response()->json([
             'total' => $d_count,
@@ -35,7 +37,14 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $d = new Department();
+        // $d->name = $request->name;
+        // $d->save();
+        $d = Department::create(['name' => $request->name]);
+        return response()->json([
+            'message' => 'เพิ่มข้อมูลเรียบร้อย',
+            'data' => $d
+        ], 201);
     }
 
     /**
@@ -46,7 +55,20 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        //
+        $d = Department::find($id);
+
+        if ($d == null) {
+            return response()->json([
+                'errors' => [
+                    'status_code' => 404,
+                    'message' => 'ไม่พบข้อมูล'
+                ]
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $d
+        ], 200);
     }
 
     /**
@@ -58,7 +80,23 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        if ($id != $request->id) {
+            return response()->json([
+                'errors' => [
+                    'status_code' => 400,
+                    'message' => 'รหัสไม่ตรงกัน'
+                ]
+            ], 400);
+        }
+
+        $d = Department::find($id);
+        $d->name = $request->name;
+        $d->save();
+        return response()->json([
+            'message' => 'แก้ไขข้อมูลเรียบร้อย',
+            'data' => $d
+        ], 200);
     }
 
     /**
@@ -69,6 +107,21 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $d = Department::find($id);
+
+        if ($d == null) {
+            return response()->json([
+                'errors' => [
+                    'status_code' => 404,
+                    'message' => 'ไม่พบข้อมูล'
+                ]
+            ], 404);
+        }
+
+        $d->delete();
+
+        return response()->json([
+            'message' => 'ลบข้อมูลเรียบร้อย'
+        ], 200);
     }
 }
