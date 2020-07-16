@@ -49,16 +49,26 @@ Route::apiResource('product', 'API\ProductController');
 // api/search/product?name=coke&status=active
 Route::get('/search/product', 'API\ProductController@search');
 
-// Route::get('/product', 'API\ProductControllerr@index');
-// Route::post('/product', 'API\ProductControllerr@store');
-// Route::get('/product/{id}', 'API\ProductControllerr@show');
-// Route::put('/product/{id}', 'API\ProductControllerr@update');
-// Route::delete('/product/{id}', 'API\ProductControllerr@destroy');
+// Route::get('/product', 'API\ProductController@index');
+// Route::post('/product', 'API\ProductController@store');
+// Route::get('/product/{id}', 'API\ProductController@show');
+// Route::put('/product/{id}', 'API\ProductController@update');
+// Route::delete('/product/{id}', 'API\ProductController@destroy');
 
 
 //day 3
 Route::apiResource('department', 'API\DepartmentController');
 // api/search/department?name=บ
-Route::get('/search/department', 'API\DepartmentController@search');
+Route::get('/search/department', 'API\DepartmentController@search')->middleware(['auth.basic.once']);
 
 Route::apiResource('officer', 'API\OfficerController');
+
+//Authentication
+// api/register
+Route::post('/register', 'API\AuthController@register');
+// api/login
+Route::post('/login', 'API\AuthController@login');
+// api/logout
+Route::post('/logout', 'API\AuthController@logout');
+// api/me
+Route::get('/me', 'API\AuthController@me'); //get profile user
