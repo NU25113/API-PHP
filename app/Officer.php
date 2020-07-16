@@ -23,7 +23,7 @@ class Officer extends Model
     // protected $hidden = ['firstname','lastname'];
 
     //เพิ่ม getter ไปยัง json
-    protected $appends = ['fullname','age'];
+    protected $appends = ['fullname','age', 'picture_url'];
 
     //Defining Accessors (getter)
     public function getFullnameAttribute() { //fullname
@@ -32,6 +32,10 @@ class Officer extends Model
 
     public function getAgeAttribute() { //age
         return now()->diffInYears($this->dob);
+    }
+
+    public function getPictureUrlAttribute() { //picture_url
+        return asset('storage/upload') . '/' . $this->picture;
     }
 
 }
