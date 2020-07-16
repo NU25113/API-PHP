@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Officer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OfficerController extends Controller
 {
@@ -31,7 +33,31 @@ class OfficerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $of = new Officer();
+            $of->firstname = $request->firstname;
+            $of->lastname = $request->lastname;
+            $of->dob = $request->dob;
+            $of->salary = $request->salary;
+            $of->user_id = $request->user_id;
+            $of->department_id = $request->department_id;
+
+            $of->save();
+            DB::commit();
+
+            return response()->json([
+                'message' => 'เพิ่มข้อมูลพนักงานเรียบร้อย'
+            ], 201);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล',
+                'system message' => $th->getMessage()
+            ], 400);
+        }
     }
 
     /**

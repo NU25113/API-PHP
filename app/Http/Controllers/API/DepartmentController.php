@@ -29,13 +29,19 @@ class DepartmentController extends Controller
         // ], 200);
 
         // $d = Department::orderBy('id','desc')->with(['officers'])->get();
+        // $d = Department::orderBy('id','desc')->with(['officers' => function($query) {
+        //     $query->orderBy('salary','desc');
+        // }])->get();
+
+        //?page=2&per_page=5
+        $per_page = request()->query('per_page');
+        $page_size = $per_page == null ? 5 : $per_page;
+
         $d = Department::orderBy('id','desc')->with(['officers' => function($query) {
             $query->orderBy('salary','desc');
-        }])->get();
+        }])->paginate($page_size);
 
-        return response()->json([
-            'data' => $d
-        ], 200);
+        return response()->json($d, 200);
     }
 
     public function search() {
