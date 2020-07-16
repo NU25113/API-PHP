@@ -61,7 +61,7 @@ Route::apiResource('department', 'API\DepartmentController');
 // api/search/department?name=บ
 Route::get('/search/department', 'API\DepartmentController@search')->middleware(['auth.basic.once']);
 
-Route::apiResource('officer', 'API\OfficerController');
+Route::apiResource('officer', 'API\OfficerController')->middleware('auth:sanctum');
 
 //Authentication
 // api/register
