@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Officer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -86,7 +87,33 @@ class AuthController extends Controller
 
     }
 
-    public function logout() {}
+    //post
+    public function logout(Request $request) {
+        //หาค่าของคอลัมน์ id ของ token ปัจจุบันที่กำลังล็อกอินอยู่
+        $id = $request->user()->currentAccessToken()->id;
 
-    public function me() {}
+        //ลบ record token user ที่กำลังล็อกอินอยู่ ในตารางฐานข้อมูล
+        $request->user()->tokens()->where('id', $id)->delete();
+
+        return response()->json([
+            'message' => 'ออกจากระบบเรียบร้อย'
+        ], 200);
+    }
+
+    //get
+    public function me(Request $request) {
+        $user = $request->user();
+
+        $of = Officer::where('user_id', $user->id)->first();
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'fullname' => $of->fullname,
+                'age' => $of->age,
+                'dob' => $of->dob,
+            ]
+        ], 200);
+    }
 }
