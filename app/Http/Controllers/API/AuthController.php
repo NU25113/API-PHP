@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -44,7 +45,46 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login() {}
+    public function login(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'email' => 'required|email',
+            'password' => 'required|min:3',
+            'device_name' => 'required'
+        ],[
+            'email.required' => 'ป้อนข้อมูลอีเมล์ด้วย',
+            'email.email' => 'รูปแบบอีเมล์ไม่ถูกต้อง',
+            'password.required' => 'ป้อนข้อมูลรหัสผ่านด้วย',
+            'password.min' => 'ป้อนข้อมูลรหัสผ่านอย่างน้อย 3 ตัวอักษร',
+            'device_name.required' => 'ระบุข้อมูลอุปกรณ์ของ Client ด้วย',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'errors' => [
+                    'message' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+                ]
+            ], 401);
+        }
+
+        $token = $user->createToken($request->device_name)->plainTextToken;
+
+        $personal_access_token = PersonalAccessToken::findToken($token);
+
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => $personal_access_token->created_at->addMinutes(config('sanctum.expiration'))
+        ], 200);
+
+    }
 
     public function logout() {}
 

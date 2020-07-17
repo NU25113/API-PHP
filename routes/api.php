@@ -69,6 +69,6 @@ Route::post('/register', 'API\AuthController@register');
 // api/login
 Route::post('/login', 'API\AuthController@login');
 // api/logout
-Route::post('/logout', 'API\AuthController@logout');
+Route::post('/logout', 'API\AuthController@logout')->middleware('auth:sanctum');
 // api/me
-Route::get('/me', 'API\AuthController@me'); //get profile user
+Route::get('/me', 'API\AuthController@me')->middleware('auth:sanctum'); //get profile user
