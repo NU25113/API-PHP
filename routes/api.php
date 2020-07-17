@@ -61,7 +61,7 @@ Route::apiResource('department', 'API\DepartmentController');
 // api/search/department?name=บ
 Route::get('/search/department', 'API\DepartmentController@search')->middleware(['auth.basic.once']);
 
-Route::apiResource('officer', 'API\OfficerController')->middleware('auth:sanctum');
+Route::apiResource('officer', 'API\OfficerController')->middleware(['auth:sanctum', 'isAdmin']);
 
 //Authentication
 // api/register
@@ -72,3 +72,6 @@ Route::post('/login', 'API\AuthController@login');
 Route::post('/logout', 'API\AuthController@logout')->middleware('auth:sanctum');
 // api/me
 Route::get('/me', 'API\AuthController@me')->middleware('auth:sanctum'); //get profile user
+
+// api/updateprofile
+Route::put('/updateprofile', 'API\AuthController@updateprofile')->middleware('auth:sanctum');

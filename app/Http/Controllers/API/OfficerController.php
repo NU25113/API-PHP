@@ -112,6 +112,15 @@ class OfficerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $of = Officer::find($id);
+        if ($of->picture != 'nopic.png') {
+            Storage::disk('public')->delete('upload/' . $of->picture);
+        }
+        $of->delete();
+
+        return response()->json([
+            'message' => 'ลบข้อมูลเรียบร้อย'
+        ], 200);
+
     }
 }

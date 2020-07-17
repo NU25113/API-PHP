@@ -102,18 +102,67 @@ class AuthController extends Controller
 
     //get
     public function me(Request $request) {
-        $user = $request->user();
 
-        $of = Officer::where('user_id', $user->id)->first();
+        $user = $request->user();
+       // $of = Officer::where('user_id', $user->id)->first();
 
         return response()->json([
             'user' => [
                 'id' => $user->id,
                 'email' => $user->email,
-                'fullname' => $of->fullname,
-                'age' => $of->age,
-                'dob' => $of->dob,
+                'fullname' => $user->officer->fullname, //$of->fullname
+                'age' =>  $user->officer->age, //$of->age
+                'dob' => $user->officer->dob   //$of->dob
             ]
         ], 200);
     }
+
+
+    //PUT (ใน body ของ POSTMAN ต้องส่ง password ใหม่เข้ามา)
+    public function updateprofile(Request $request) {
+        //update password ใหม่
+
+        //1. ให้ทำ validation password อย่างน้อย 3 ตัวอักษร และต้องกรอกเข้ามา
+        $validator = Validator::make($request->all(),[
+            'password' => 'required|min:3',
+        ],[
+            'password.required' => 'ป้อนข้อมูลรหัสผ่านด้วย',
+            'password.min' => 'ป้อนข้อมูลรหัสผ่านอย่างน้อย 3 ตัวอักษร',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => [
+                    'message' => $validator->errors()
+                ]
+            ], 422);
+        }
+
+        //2. อัปเดต password ใหม่ (Hash) find($id ของ user)
+        // $request->user()->id
+
+        $user_update = User::find($request->user()->id);
+        $user_update->password = Hash::make($request->password);
+        $user_update->save();
+
+        //3. firstname and lastname update
+        $of = Officer::where('user_id', $request->user()->id)->first();
+        $of->firstname = $request->firstname;
+        $of->lastname = $request->lastname;
+        $of->save();
+
+        //firstname and lastname update (relationshiops)
+        // $of = new Officer();
+        // $of->firstname = $request->firstname;
+        // $of->lastname = $request->lastname;
+        // $user_update->officer()->save($of);
+
+        //3. return บอกว่า แก้ไขข้อมูลส่วนตัวเรียบร้อยแล้ว 200 และควร return ข้อมูล user ล่าสุดออกไปด้วย
+        return response()->json([
+            'message' => 'แก้ไขข้อมูลส่วนตัวเรียบร้อยแล้ว',
+            'user' => $user_update
+        ], 200);
+
+    }
+
+
 }
