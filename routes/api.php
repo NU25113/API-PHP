@@ -13,65 +13,65 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-// http://localhost/tot_laravel7/public/api/
-Route::get('/', 'API\IndexController@index');
-Route::get('/contact/{email}', 'API\IndexController@contact');
 
-// http://localhost/tot_laravel7/public/api/product/3/comment/34
-// Route::get('/product/{id}/comment/{comment_id}', function($id, $comment_id) {
-//     return 'product id '.$id. ' comment '.$comment_id; //3 34
-// });
 
-//optional parameters ?
-Route::get('/staff/{name?}', function($name = 'Bob') {
+//! get
+
+
+//TODO http://127.0.0.1/TOT%20KKN/tot_laravel7_for_SmartCity/public/api/product/1
+Route::get('/product/{id}/comment/{comment_id}', function($id, $comment_id) {
+    return 'product id '.$id. ' comment '.$comment_id; //3 34
+});
+
+//TODO http://127.0.0.1/TOT%20KKN/tot_laravel7_for_SmartCity/public/api/staff
+Route::get('/staff/{name?}', function($name = 'NUN') {
     return 'staff ' . $name;
 });
 
-// api/admin
-Route::prefix('admin')->group(function() {
-    Route::get('/', function() {
-        return 'admin index';
-    });
-    Route::get('/profile', function() {
-        return 'admin profile';
-    });
-    Route::get('/book', function() {
-        return 'admin book';
-    });
-});
+//TODO http://127.0.0.1/TOT%20KKN/tot_laravel7_for_SmartCity/public/api/product/5
+Route::get('/product/{id}', function ($id=1) {
+    return 'id:' .$id;
+}); //?ไม่ได้บังคับให้ใส่แค่ตัวเลข
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
+
+//TODO http://127.0.0.1/TOT-KKN/tot_laravel7_for_SmartCity/public/api/username/31
+Route::get('/username/{id?}', function ($id) {
+    return 'id:' .$id;
+})->where('id' ,'[0-9]+'); //?บังคับให้ใส่แค่ตัวเลข
+
+
+//TODO http://127.0.0.1/TOT-KKN/tot_laravel7_for_SmartCity/public/api/admin/
+Route::prefix('admin')->group(function(){
+    Route::get('/', function () {
+        return 'Index';
+    });
+    Route::get('/profile', function () {
+        return 'Profile';
+    });
+    Route::get('/book', function () {
+        return 'Book';
+    });
+}); //? การตั้งให้เป็น GROUP เพื่อให้การเข้าสู่หน้าเร้าเป็นกลุ่ม
+
+
+Route::middleware('auto:api', 'throttle:60,1')->group(function(){
+    Route::get('/user', function () {
+        //
+    });
+}); //? ความปลอดภัย ให้จำกัดเข้าเข้าเร้า แค่ 60 ครั้งต่อ 1 นาที
+
+
+                      //! นำไปที่ controller แล้ว
+//* http://127.0.0.1/TOT%20KKN/tot_laravel7_for_SmartCity/public/api
+Route::get('/','API\IndexController@index');
+Route::get('/contact/{email}','API\IndexController@contact');
+Route::get('/search/product', 'API\ProductController@search');
+Route::apiResource('product', 'API\ProductController');
+
+// Route::middleware('auto:api')->get('/user', function (Request $request){
 //     return $request->user();
 // });
 
-// day2
-Route::apiResource('product', 'API\ProductController');
-// api/search/product?name=coke&status=active
-Route::get('/search/product', 'API\ProductController@search');
+Route::apiResource('department/', 'API\DepartmentController');
 
-// Route::get('/product', 'API\ProductController@index');
-// Route::post('/product', 'API\ProductController@store');
-// Route::get('/product/{id}', 'API\ProductController@show');
-// Route::put('/product/{id}', 'API\ProductController@update');
-// Route::delete('/product/{id}', 'API\ProductController@destroy');
-
-
-//day 3
-Route::apiResource('department', 'API\DepartmentController');
-// api/search/department?name=บ
-Route::get('/search/department', 'API\DepartmentController@search')->middleware(['auth.basic.once']);
-
-Route::apiResource('officer', 'API\OfficerController')->middleware(['auth:sanctum', 'isAdmin']);
-
-//Authentication
-// api/register
-Route::post('/register', 'API\AuthController@register');
-// api/login
-Route::post('/login', 'API\AuthController@login');
-// api/logout
-Route::post('/logout', 'API\AuthController@logout')->middleware('auth:sanctum');
-// api/me
-Route::get('/me', 'API\AuthController@me')->middleware('auth:sanctum'); //get profile user
-
-// api/updateprofile
-Route::put('/updateprofile', 'API\AuthController@updateprofile')->middleware('auth:sanctum');
+Route::apiResource('emergency/', 'API\EmergencyController');

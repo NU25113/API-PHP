@@ -16,44 +16,19 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //$d = Department::all(); //select * from departments
-        // $d = Department::select('id','name')->orderBy('id','desc')->get();
-        // $d = Department::find(2);
-        // $d = Department::where('name','like', '%บ%')->get();
-        // $d = Department::latest()->get();//sort desc created_at
-        // $d = DB::select('select * from departments order by id desc');
-        // $d_count = Department::count();
-        // return response()->json([
-        //     'total' => $d_count,
-        //     'data' => $d
-        // ], 200);
-
-        // $d = Department::orderBy('id','desc')->with(['officers'])->get();
-        // $d = Department::orderBy('id','desc')->with(['officers' => function($query) {
-        //     $query->orderBy('salary','desc');
-        // }])->get();
-
-        //?page=2&per_page=5
-        $per_page = request()->query('per_page');
-        $page_size = $per_page == null ? 5 : $per_page;
-
-        $d = Department::orderBy('id','desc')->with(['officers' => function($query) {
-            $query->orderBy('salary','desc');
-        }])->paginate($page_size);
-
-        return response()->json($d, 200);
-    }
-
-    public function search() {
-        $query = request()->query('name');
-        $keyword = '%'.$query.'%';
-        $d = Department::where('name', 'like', $keyword)->get();
-
+        // $d = Department::all ();
+         $d  = Department::select('id','name')->orderBy('id','desc') ->get(); //*เลือกคอลัมที่เพิ่มล่าสุดมาไว้ข้างบน เรียงจากน้อยไปมาก
+        // $d = Department::find(2);//*ถ้าต้องการถ้าตำแหน่งจาก pk
+        // $d = Department::where('name','like','%ผ%')->get();//*เลือกชื่อที่ขึ้นต้นว่า ผ
+        // $d  = Department::select('id','name')->get();//*เลือกคือบางคอลัม
+        // $d = Department::latest()-> get(); //ถ้าในคอลลัมมีคอลัมคลีเอตแอต มันจะ sort ที่vreated_at
+        //  $d = DB::select('select * from department order by id desc ');
+        $d_coun = Department::count();//
         return response()->json([
+            'total' => $d_coun,
             'data' => $d
         ], 200);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -62,14 +37,12 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        // $d = new Department();
-        // $d->name = $request->name;
-        // $d->save();
-        $d = Department::create(['name' => $request->name]);
+        $d = new Department();
+        $d->name = $request->name;
+        $d->save();
         return response()->json([
-            'message' => 'เพิ่มข้อมูลเรียบร้อย',
-            'data' => $d
-        ], 201);
+            'message' =>'เพิ่มข้อมูลเรียบร้อย'
+        ],201);
     }
 
     /**
@@ -95,7 +68,6 @@ class DepartmentController extends Controller
             'data' => $d
         ], 200);
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -105,25 +77,14 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        if ($id != $request->id) {
-            return response()->json([
-                'errors' => [
-                    'status_code' => 400,
-                    'message' => 'รหัสไม่ตรงกัน'
-                ]
-            ], 400);
-        }
-
         $d = Department::find($id);
         $d->name = $request->name;
         $d->save();
         return response()->json([
-            'message' => 'แก้ไขข้อมูลเรียบร้อย',
+            'message' => 'แก้ไขข้อมูบเรียบร้อย',
             'data' => $d
         ], 200);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -132,21 +93,6 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        $d = Department::find($id);
-
-        if ($d == null) {
-            return response()->json([
-                'errors' => [
-                    'status_code' => 404,
-                    'message' => 'ไม่พบข้อมูล'
-                ]
-            ], 404);
-        }
-
-        $d->delete();
-
-        return response()->json([
-            'message' => 'ลบข้อมูลเรียบร้อย'
-        ], 200);
+        //
     }
 }

@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     public function index() {
-        return 'DateTime: ' . now() . config('app.name');
+        return 'DATE :' .now() . config('app.name');
     }
 
     public function contact($email) {
         return 'TOT Email: ' . $email;
     }
+
 }

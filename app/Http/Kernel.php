@@ -1,5 +1,7 @@
 <?php
 
+//TODO ตัวประกาศ middleware
+
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;

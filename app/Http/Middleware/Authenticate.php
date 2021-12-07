@@ -1,5 +1,5 @@
 <?php
-
+//TODO เช็คล๊อกอิน
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;

@@ -1,0 +1,9 @@
+C:\xampp\htdocs\NT-KKN\SmartCity
+
+composer dump-autoload
+composer update
+php artisan migrate
+
+
+php artisan migrateLrollblack ย้อนกลับไปก่อนหน้านี้
+php artisan migrate:fresh //ลบตารางทั้งหมด
